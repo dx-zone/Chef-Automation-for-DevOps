@@ -5,6 +5,10 @@
 ## These are my notes and examples written during the Automating Infrastructure - Chef for DevOps video course by Whizlabs.com ##
 ## Author: Daniel Cruz ##
 
+# To start with Chef right away without the need to install your own Chef Server,
+# you can sign up for a hosted Chef by Chef Software (is free up to 25 nodes but this might change any time)
+# http://manage.chef.io/signup
+
 ## Additional reading resources for in depth knowledge ##
 # Chef Recipes - https://docs.chef.io/recipes/
 # Chef Resources - https://docs.chef.io/resources/directory/
