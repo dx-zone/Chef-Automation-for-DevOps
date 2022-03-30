@@ -1,0 +1,16 @@
+DEPENDENCIES
+  my_cookbook
+    path: cookbooks/my_cookbook
+
+GRAPH
+  apt (7.4.2)
+  chef-client (12.3.4)
+    cron (>= 4.2.0)
+    logrotate (>= 1.9.0)
+  cron (7.0.4)
+  logrotate (3.0.9)
+  my_cookbook (0.1.0)
+    apt (>= 0.0.0)
+    chef-client (>= 0.0.0)
+    ntp (>= 0.0.0)
+  ntp (3.12.2)

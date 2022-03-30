@@ -1,27 +1,23 @@
 # -*- mode: ruby -*-
 # vi: set ft=ruby :
 
-BOX_IMAGE = "ubuntu/bionic64"
-YOUR_ORG = "https://api.chef.io/organizations/mydatacenter"
-YOUR_USER_KEY = ".chef/dx-zone.pem"
-YOUR_USER = "dx-zone"
-NODE_NAME = "server"
+box_image = 'ubuntu/bionic64'
+your_org = 'https://api.chef.io/organizations/mydatacenter'
+your_user_key = '.chef/dx-zone.pem'
+your_user = 'dx-zone'
+node_name = 'server'
 
 Vagrant.configure("2") do |config|
-  config.vm.box = BOX_IMAGE
-  config.vm.box_url = "http://opscode-vm-bento.s3.amazonaws.com/vagrant/virtualbox/opscode_ubuntu-16.04_chef-provisionerless.box"
+  config.vm.box = box_image
+  config.vm.box_url = 'http://opscode-vm-bento.s3.amazonaws.com/vagrant/virtualbox/opscode_ubuntu-16.04_chef-provisionerless.box'
   config.omnibus.chef_version = :latest
+  config.berkshelf.enabled = true
 
   config.vm.provision :chef_client do |chef|
-    chef.provisioning_path = "/etc/chef"
-    chef.chef_server_url = YOUR_ORG
-    chef.validation_key_path = YOUR_USER_KEY
-    chef.validation_client_name = YOUR_USER
-    chef.node_name = NODE_NAME
+    chef.provisioning_path = '/etc/chef'
+    chef.chef_server_url = your_org
+    chef.validation_key_path = your_user_key
+    chef.validation_client_name = your_user
+    chef.node_name = node_name
   end
 end
-
-# Add a script to install Chef Workstation
-# wget https://packages.chef.io/files/stable/chef-workstation/21.10.640/ubuntu/20.04/chef-workstation_21.10.640-1_amd64.deb
-# dpkg -i chef-workstation_21.10.640-1_amd64.deb
-# chef-client -y
