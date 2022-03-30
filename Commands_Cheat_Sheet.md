@@ -338,3 +338,87 @@ knife node run_list add server 'role[web_servers]'
 
 
 
+Creating a separated Chef environments for development named *dev* (but it could be for development, testing, and/or production) and list the environment variables
+
+```bash
+export EDITOR=$(which vi) # for vim
+
+knife environment create dev
+
+knife environment list
+```
+
+
+
+List the environment of the nodes
+
+```bash
+knife node list
+
+knife node list -E dev
+```
+
+
+
+Change the environment of the node named *server* to *dev* using `knife`
+
+```bash
+knife node environment set server dev
+```
+
+
+
+Use specific cookbook version and override certain attributes for the environment
+
+```bash
+knife environment edit dev
+
+{
+  "name": "dev",
+  "description": "",
+  "cookbook_versions": {
+    "ntp": "1.6.8"
+  },
+  "json_class": "Chef::Environment",
+  "chef_type": "environment",
+  "default_attributes": {
+  },
+  "override_attributes": {
+    "ntp": {
+      "servers": ["0.europe.pool.ntp.org", "1.europe.pool.ntp.org", "2.europe.pool.ntp.org", "3.europe.pool.ntp.org"]
+    }
+  }
+}
+```
+
+
+
+Alternatively, you can create a new environment with with a new Ruby file in he *environments* diretory inside your Chef repository.
+
+```bash
+cat << EOF > ./chef-repo/environments/dev.rb
+{
+  "name": "dev",
+  "description": "",
+  "cookbook_versions": {
+    "ntp": "1.6.8"
+  },
+  "json_class": "Chef::Environment",
+  "chef_type": "environment",
+  "default_attributes": {
+
+  },
+  "override_attributes": {
+    "ntp": {
+      "servers": [
+        "0.europe.pool.ntp.org",
+        "1.europe.pool.ntp.org",
+        "2.europe.pool.ntp.org",
+        "3.europe.pool.ntp.org"
+      ]
+    }
+  }
+}
+EOF
+```
+
