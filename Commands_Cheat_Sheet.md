@@ -7,7 +7,7 @@ knife client list
 ```
 
 
-Dele both the client and the node from Chef Hosted/Server
+Dele both the client and the node from Chef Hosted/Server (I.E. node named *server* in this case)
 
 ```bash
 knife node delete server -y && knife client delete server -y
@@ -148,7 +148,6 @@ chef generate cookbook -b ./
 berks install
 
 berks upload
-
 ```
 
 
@@ -277,4 +276,65 @@ cat /tmp/local_mode.txt
 
 
 
-s
+Run a cookbook locally on a chef client server/node without pulling the cookbook from the Chef Server (assuming the cookbook has been created locally in the chef client/node server).
+
+```bash
+chef-client --local-mode -o my_local_cookbook
+```
+
+
+
+Using `knife` in local mode just like running a cookbook with `chef-client` in local mode.
+
+```bash
+knife node run_list add -z laptop 'recipe[my_cookbook]'
+```
+
+
+
+Group nodes with similar configuration with **roles**.
+
+Create a **role** and upload the **role** to Chef Server
+
+```bash
+cat << EOF > my_cookbook/roles/web_servers.rb
+name 'web_servers'
+description 'This role contains nodes, which act as web servers'
+run_list 'recipe[ntp]'
+default_attributes 'ntp' => {
+    'ntpdate' => {
+        'disable' => true
+    }
+}
+
+knife role from file web_servers.rb
+```
+
+
+
+Upload a **role** to the Chef Server
+
+```bash
+knife role from file web_servers.rb
+```
+
+
+
+Assign a **role** to a node called *server*
+
+```bash
+knife node run_list add server 'role[web_servers]'
+```
+
+
+
+Remove a node from the **role** called *server*
+
+```bash
+knife node run_list add server 'role[web_servers]'
+```
+
+
+
+
+
