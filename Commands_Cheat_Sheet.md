@@ -1,13 +1,8 @@
-Show clients bootstrapped to Chef Hosted/Server
-
-(Servers with the Chef-Client installed and bootstrapped)
-
-```bash
-knife client list
-```
+## Commands, Tips & Tricks to work with Chef tools
 
 
-Dele both the client and the node from Chef Hosted/Server (I.E. node named *server* in this case)
+
+Delete both the client and the node from Chef Hosted/Server (I.E. node named *server* in this case)
 
 ```bash
 knife node delete server -y && knife client delete server -y
@@ -29,10 +24,20 @@ Create a new cookbook named *my_cookbook* with the **knife** tool
 knife generate cookbook cookbooks/my_cookbook
 ```
 
+
+
 Upload a cookbok to Chef Server
 
 ```bash
 knife cookbook upload my_cookbook
+```
+
+
+
+Delete a cookbook from Chef Server
+
+```bash
+knife cookbook delete <cookbook name>
 ```
 
 
@@ -45,10 +50,37 @@ knife node run_list add server 'recipe[my_cookbook]'
 
 
 
-Run the Chef client on your node
+Remove a server from a node's runlist
+
+```bash
+knife node run_list delete server 'recipe[my_cookbook]'
+```
+
+
+
+Run the Chef client on your node to associate the host, add it as a node, and bootstrap it to the Chef Server or Hosted Chef
 
 ```bash
 sudo chef-client
+```
+
+
+
+Show the list of the nodes that has been bootstrapped to Chef Server or to Hosted Chef
+
+(hosts with the `chef-client` installed and bootstrapped)
+
+```bash
+knife node show server
+```
+
+
+
+
+Show the list of the chef-clients association of the hosts that has been bootstrapped to Chef Server or to Hosted Chef with the `chef-client` agent.
+
+```bash
+knife client list
 ```
 
 
@@ -336,8 +368,6 @@ knife node run_list add server 'role[web_servers]'
 
 
 
-
-
 Creating a separated Chef environments for development named *dev* (but it could be for development, testing, and/or production) and list the environment variables
 
 ```bash
@@ -419,6 +449,86 @@ cat << EOF > ./chef-repo/environments/dev.rb
     }
   }
 }
+EOF
+```
+
+
+
+Create the environment on the Chef server from the newly created file using knife
+
+```bash
+knife environment from file dev.rb
+```
+
+
+
+Sync your local changes to your Chef server for both, knife and Berkshelf simultaneously
+
+```bash
+knife exec -E 'nodes.transform("chef_environment:_default") { |n| n.chef_environment("dev") }'
+```
+
+
+
+Search for nodes in a specific environment (*dev* in this example)
+
+```bash
+knife search node 'chef_environment:dev'
+```
+
+
+
+Freezing a cookbook version to avoid someone to overwrite the same version with a broken code
+
+```bash
+knife cookbook upload ntp --freeze
+```
+
+
+
+Force overwrite a cookbook that has been already frozen
+
+```bash
+knife cookbook upload ntp --freeze --force
+
+berks upload --force
+```
+
+
+
+Start the Chef client in daemon mode so that it runs automatically every 30 minutes and validate it is running
+
+```bash
+sudo chef-client -i 1800
+
+ps auxw | grep chef-client
+```
+
+
+
+You can use the `chef-client` cookbook to install the Chef client as a service
+
+```
+knife supermarket download chef-client
+
+tar zxvf chef-client.tar.gz
+
+mv chef-client ./chef-repo/cookbooks && rm chef-client.tar.gz
+
+knife cookbook upload chef-client
+
+berks upload
+```
+
+
+
+Using Cronjob to run the Chef client as a daemon every 15 minutes
+
+```bash
+cat << EOF > /etc/cron.d/chef_client
+PATH=/usr/local/bin:/usr/bin:/bin
+# m h dom mon dow user command
+*/15 * * * * root chef-client -l warn | grep -v 'retrying [1234]/5 in'
 EOF
 ```
 

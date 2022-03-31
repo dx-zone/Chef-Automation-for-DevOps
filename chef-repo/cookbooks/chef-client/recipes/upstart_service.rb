@@ -1,0 +1,1 @@
+raise 'Support for running the chef-client using the Upstart init system has been removed from the chef-client cookbook as Ubuntu 14.04 is now EOL. Please upgrade your system or downgrade to the chef-client cookbook version < 11.0.'
