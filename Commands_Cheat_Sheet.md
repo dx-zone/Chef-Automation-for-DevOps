@@ -20,16 +20,24 @@ chef generate cookbook cookbooks/my_cookbook
 
 Create a new cookbook named *my_cookbook* with the **knife** tool
 
+```bash
+knife generate cookbook my_cookbook
 ```
-knife generate cookbook cookbooks/my_cookbook
-```
 
 
 
-Upload a cookbok to Chef Server
+Upload a cookbook to Chef Server
 
 ```bash
 knife cookbook upload my_cookbook
+```
+
+
+
+Download a cookbook previously uploaded to a Chef Server or to a Hosted Server
+
+```bash
+knife cookbook download my_cookbook
 ```
 
 
@@ -88,7 +96,7 @@ knife client list
 Test a cookbook with Test Kitchen
 
 ```yaml
-cat << EOF > .kitchen.yml
+cat << EOF >> .kitchen.yml
 ---
 driver:
   name: vagrant
@@ -121,6 +129,22 @@ Search the Marketplace for Cookbooks
 
 ```bash
 knife supermarket search iptables
+
+knife supermarket search ntp
+
+knife supermarket search mysql
+```
+
+
+
+Shows details about the Cookbook searched in the Supermarket
+
+```bash
+knife supermarket show iptables
+
+knife supermarket show ntp
+
+knife supermarket show mysql
 ```
 
 
@@ -150,10 +174,12 @@ knife cookbook show iptables
 
 
 
-Inspect a cookbook syntax with Cookstyle tool
+Inspect a cookbook syntax with Cookstyle tool (syntax and style-cheking tool for Ruby and cookbooks)
 
 ```bash
 cookstyle cookbooks/my_cookbook
+
+cookstyle -C true cookbooks/my_cookbook
 ```
 
 
@@ -161,13 +187,13 @@ cookstyle cookbooks/my_cookbook
 Downloads all the dependencies you defined recursively with Berkshelf and upload the cookbook
 
 ```bash
-cat << EOF >> cookbooks/my_cookbook/metadata.rb
+cat << EOF >>> cookbooks/my_cookbook/metadata.rb
 depends 'chef-client'
 depends 'apt'
 depends 'ntp'
 EOF
 
-cat << EOF >> cookbooks/my_cookbook/recipes/default.rb
+cat << EOF >>> cookbooks/my_cookbook/recipes/default.rb
 include_recipe 'chef-client'
 include_recipe 'apt'
 include_recipe 'ntp'
@@ -187,7 +213,7 @@ berks upload
 Integrate Berkshelf with Vagrant to install and uploads all the required cookbooks on your Chef server whenever you execute **vagrant up** or **vagrant provision**
 
 ```ruby
-cat << EOF > Vagrantfile
+cat << EOF >> Vagrantfile
 # -*- mode: ruby -*-
 # vi: set ft=ruby :
 
@@ -213,7 +239,7 @@ Vagrant.configure("2") do |config|
 end
 EOF
 
-cat << EOF > Berksfile
+cat << EOF >> Berksfile
 source 'https://supermarket.chef.io'
 cookbook 'my_cookbook', path: 'cookbooks/my_cookbook'
 EOF
@@ -294,7 +320,7 @@ Run a cookbook and deploy a recipe with local mode (without a Chef Server or hos
 ```bash
 chef generate cookbook cookbooks/my_local_cookbook
 
-cat << EOF >> cookbooks/my_local_cookbook/recipes/default.rb
+cat << EOF >>> cookbooks/my_local_cookbook/recipes/default.rb
 file '/tmp/local_mode.txt' do
     content 'creaed by chef client local mode'
     action :create
@@ -329,7 +355,7 @@ Group nodes with similar configuration with **roles**.
 Create a **role** and upload the **role** to Chef Server
 
 ```bash
-cat << EOF > my_cookbook/roles/web_servers.rb
+cat << EOF >> my_cookbook/roles/web_servers.rb
 name 'web_servers'
 description 'This role contains nodes, which act as web servers'
 run_list 'recipe[ntp]'
@@ -426,7 +452,7 @@ knife environment edit dev
 Alternatively, you can create a new environment with with a new Ruby file in he *environments* diretory inside your Chef repository.
 
 ```bash
-cat << EOF > ./chef-repo/environments/dev.rb
+cat << EOF >> ./chef-repo/environments/dev.rb
 {
   "name": "dev",
   "description": "",
@@ -525,10 +551,139 @@ berks upload
 Using Cronjob to run the Chef client as a daemon every 15 minutes
 
 ```bash
-cat << EOF > /etc/cron.d/chef_client
+cat << EOF >> /etc/cron.d/chef_client
 PATH=/usr/local/bin:/usr/bin:/bin
 # m h dom mon dow user command
 */15 * * * * root chef-client -l warn | grep -v 'retrying [1234]/5 in'
 EOF
+```
+
+
+
+Write unit tests to test fails a recipe and inspect it with Chef Spec
+
+```bash
+cat << EOF >> cookbooks/my_cookbook/spec/default_spec.rb
+require 'chefspec'
+describe 'my_cookbook::default' do
+  let(:chef_run) {
+    ChefSpec::ServerRunner.new(
+      platform:'ubuntu', version:'16.04'
+    ).converge(described_recipe)
+  }
+  
+  it 'creates a greetings file, containing the platform name' do
+    expect(chef_run).to render_file('/tmp/greeting.txt').with_content('Hello! ubuntu!')
+  end
+end
+EOF
+
+chef exec rspec   cookbooks/my_cookbook/spec/default_spec.rb
+
+cat << EOF >> cookbooks/my_cookbook/recipes/default.rb
+template '/tmp/greeting.txt' do
+  variables greeting: 'Hello!'
+  action :create
+end
+EOF
+
+mkdir cookbooks/my_cookbook/templates
+
+cat << EOF >> cookbooks/my_cookbook/templates/greeting.txt.erb
+<%= @greeting %> <%= node['platform'] %>!
+EOF
+
+chef exec rspec cookbooks/my_cookbook/spec/default_spec.rb
+
+
+```
+
+
+
+Create a profile for compliance auditing and testing with Chef InSpec
+
+```bash
+# Create a new profile for your InSpec tests
+inspec init profile my_profile
+
+# Create a test ensuring that there is only one account called root with UID 0 in your /etc/passwd file
+cat << EOF >> my_profile/controls/passwd.rb
+describe passwd.uids(0) do
+  its('users') { should cmp 'root' }
+  its('entries.length') { should eq 1 }
+end
+EOF
+
+# Run the test
+inspec exec my_profile/controls/passwd.rb
+```
+
+
+
+Integration-testing Chef cookbooks and creating default attributes
+
+```bash
+# Edit your cookbook's default recipe
+cat << EOF >> cookbooks/my_cookbook/recipes/default.rb
+file "/tmp/greeting.txt" do
+  content node['my_cookbook']['greeting'] # Resolve to 'content "Ohai, Chefs!"' as defined in the attributes/default.rb
+end
+EOF
+
+# Edit your cookbook's default attributes
+mkdir -p cookbooks/my_cookbook/attributes
+
+cat << EOF >> cookbooks/my_cookbook/attributes/default.rb
+default['my_cookbook']['greeting'] = "Ohai, Chefs!"
+EOF
+
+# Change to your cookbook directory
+cd cookbooks/my_cookbook
+
+# Edit the default Test Kitchen configuration file to only test against Ubuntu 18.04
+cat << EOF >> ./chef-repo/.kitchen.yml
+platforms:
+  - name: ubuntu-18.04
+#  - name: ubuntu-20.04
+#  - name: centos-8
+
+EOF
+
+# Create your test, defining what you expect your cookbook to do:
+mkdir test/recipes/
+
+cat << EOF >> test/recipes/default_test.rb
+describe file('/tmp/greeting.txt') do
+  its('content') { should match 'Ohai, Chefs!' }
+end
+EOF
+
+# Run Test Kitchen
+kitchen test
+
+# Alternative, Test Kitchen against a particular platform/version
+kitchen test default-ubuntu-20.04
+kitchen test 20
+
+# List the status of the various VMs managed by Test Kitchen
+kitchen list
+```
+
+
+
+ Pre-Flight checks before executing a cookbook to find which nodes will be affected and how
+
+```bash
+export GEM_HOME="$(ruby -e 'puts Gem.user_dir')"
+export PATH="$PATH:$GEM_HOME/bin"
+
+chef gem install knife-preflight
+
+knife preflight ntp
+
+knife search node recipes:ntp -a name
+
+knife search node roles:ntp -a name
+
 ```
 

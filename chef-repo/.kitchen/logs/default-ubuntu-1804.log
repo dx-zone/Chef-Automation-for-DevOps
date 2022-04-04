@@ -1,5 +1,0 @@
-I, [2022-03-29T16:26:50.060119 #17778]  INFO -- default-ubuntu-1804: -----> Verifying <default-ubuntu-1804>...
-I, [2022-03-29T16:26:50.061024 #17778]  INFO -- default-ubuntu-1804: Preparing files for transfer
-I, [2022-03-29T16:26:50.061382 #17778]  INFO -- default-ubuntu-1804: Transferring files to <default-ubuntu-1804>
-I, [2022-03-29T16:26:50.061493 #17778]  INFO -- default-ubuntu-1804: Downloading files from <default-ubuntu-1804>
-I, [2022-03-29T16:26:50.062883 #17778]  INFO -- default-ubuntu-1804: Finished verifying <default-ubuntu-1804> (0m0.00s).

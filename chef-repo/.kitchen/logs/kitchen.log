@@ -1,3 +1,0 @@
-I, [2022-03-29T16:26:49.384082 #17778]  INFO -- Kitchen: -----> Starting Test Kitchen (v3.2.2)
-I, [2022-03-29T16:26:50.060030 #17778]  INFO -- Kitchen: -----> Verifying <default-ubuntu-1804>...
-I, [2022-03-29T16:26:50.063102 #17778]  INFO -- Kitchen: -----> Test Kitchen is finished. (0m0.68s)
