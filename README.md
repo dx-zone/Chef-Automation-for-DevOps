@@ -8,11 +8,13 @@ This is my quick reference of commands, configuations and procedures to setup a 
 
 **Books and resources I'm learning from:**
 
-[Chef Cookbook 3ed](https://learnrubythehardway.org/book/), by Matthias Marschall
+[Chef Cookbook 3ed](https://subscription.packtpub.com/book/networking-and-servers/9781786465351/2/ch02lvl1sec31/integration-testing-your-chef-cookbooks-with-test-kitchen), by Matthias Marschall
 
-[Learn Ruby The Hard Way, 3rd Edition](https://shop.learncodethehardway.org/access/buy/5/), by Zed A. Shaw
+[Learn Ruby The Hard Way, 3rd Edition](https://learnrubythehardway.org/book/), by Zed A. Shaw
 
 [Automating Infrastructure - Chef for DevOps](https://www.whizlabs.com/learn/course/chef-for-devops/382/video), by Whizlabs.com
+
+
 
 
 **Chef documentation**
