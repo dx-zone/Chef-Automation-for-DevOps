@@ -26,6 +26,10 @@ This is my quick reference of commands, configuations and procedures to setup a 
 
 
 
+### Getting Started
+
+
+
 Install Ruby on Mac OS X and update RubyGems (Ruby package manager)
 
 ```bash
