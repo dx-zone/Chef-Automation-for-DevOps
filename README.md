@@ -26,7 +26,7 @@ This is my quick reference of commands, configuations and procedures to setup a 
 
 
 
-### Getting Started
+### Getting Started: Installing and Setting The Environment
 
 
 
@@ -78,6 +78,14 @@ Alternatively to a Hosted Chef (https://managed.chef.io), if you are using Chef 
 ```bash
 # Download and extract the StarterKit.zip from your 
 chef generate repo chef-repo
+```
+
+
+
+**Starting to Work at Chef Working Directory (the chef-repo directory)**
+
+```bash
+cd chef-repo/
 ```
 
 
