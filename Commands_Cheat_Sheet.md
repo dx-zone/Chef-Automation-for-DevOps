@@ -1,11 +1,76 @@
-## Commands, Tips & Tricks to work with Chef tools
+# Chef Cookbook - Commands and Quick References to Learn Chef Cookbooks
 
 
 
-Delete both the client and the node from Chef Hosted/Server (I.E. node named *server* in this case)
+This is my quick reference of commands, configuations and procedures to setup a local environment on Mac OS X to learn infrastructure and cloud automation with Chef, Knife, Cookbooks, Vagrant, and other automation modules with Ruby Gems. The references and commands documented are the results of my learning experience and the findings following along the Chef documentation and other books.
+
+
+
+Books and resources I'm learning from:
+
+[Chef Cookbook 3ed](https://learnrubythehardway.org/book/), by Matthias Marschall
+
+[Learn Ruby The Hard Way, 3rd Edition](https://shop.learncodethehardway.org/access/buy/5/), by Zed A. Shaw
+
+[Automating Infrastructure - Chef for DevOps](https://www.whizlabs.com/learn/course/chef-for-devops/382/video), by Whizlabs.com
+
+Chef documentation
+
+* [Install Chef Workstation (formerly known as ChefDK)](https://docs.chef.io/workstation/install_workstation/)
+* [Setup Chef Workstation](https://docs.chef.io/workstation/getting_started/)
+* [About Attributes](https://docs.chef.io/attributes/)
+* [All Infra Resources](https://docs.chef.io/resources/)
+
+
+
+Install Ruby on Mac OS X and update RubyGems (Ruby package manager)
 
 ```bash
-knife node delete server -y && knife client delete server -y
+brew install ruby
+
+gem update --system
+```
+
+
+
+Install Chef Workstation on Mac OS X
+
+```bash
+brew install --cask chef-workstation
+```
+
+
+
+Configure Ruby Environmnet for Chef
+
+```bash
+# BASH
+echo 'eval "$(chef shell-init bash)"' >> ~/.bashrc
+chef shell-init bash
+
+#ZSH
+echo 'eval "$(chef shell-init zsh)"' >> ~/.zshrc
+chef shell-init zsh
+```
+
+
+
+Create a Chef account at Chef Manage (Hosted Chef https://manage.chef.com). Download and extract the Chef Starter Kit which contains your credentials, keys (<USER>.pem) and initial Chef repo diretory (chef-repo).
+
+```bash
+# To download the Starter Kit go to:
+# Administration > Select your Organization ID > Starter Kit > Download Starter Kit
+# Extract the StarterKit.zip and go into the chef-repo directory to get started
+# If you are using 
+```
+
+
+
+Alternatively to a Hosted Chef (https://managed.chef.io), if you are using Chef Server hosted in your private cloud/premises, then setup your Chef repo & credentials by following the instructions from https://docs.chef.io/workstation/getting_started/
+
+```bash
+# Download and extract the StarterKit.zip from your 
+chef generate repo chef-repo
 ```
 
 
@@ -295,6 +360,14 @@ Delete the client object of a node (chef-client) registered on a Chef Server
 
 ```bash
 knife client delete my_node
+```
+
+
+
+Delete both the client and the node from Chef Hosted/Server (I.E. node named *server* in this case)
+
+```bash
+knife node delete server -y && knife client delete server -y
 ```
 
 
@@ -674,9 +747,6 @@ kitchen list
  Pre-Flight checks before executing a cookbook to find which nodes will be affected and how
 
 ```bash
-export GEM_HOME="$(ruby -e 'puts Gem.user_dir')"
-export PATH="$PATH:$GEM_HOME/bin"
-
 chef gem install knife-preflight
 
 knife preflight ntp
@@ -684,6 +754,5 @@ knife preflight ntp
 knife search node recipes:ntp -a name
 
 knife search node roles:ntp -a name
-
 ```
 
