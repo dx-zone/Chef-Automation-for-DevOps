@@ -23,6 +23,7 @@ This is my quick reference of commands, configuations and procedures to setup a 
 * [Setup Chef Workstation](https://docs.chef.io/workstation/getting_started/)
 * [About Attributes](https://docs.chef.io/attributes/)
 * [All Infra Resources](https://docs.chef.io/resources/)
+* [Ohai & Automatic Attributes](https://docs.chef.io/ohai/)
 
 
 
@@ -44,6 +45,18 @@ Install Chef Workstation on Mac OS X
 
 ```bash
 brew install --cask chef-workstation
+```
+
+
+
+In case we need to uninstall and start a clean Chef Workstation installation, execute the uninstall script
+
+```bash
+uninstall_chef_workstation
+rm -fr ~/.chef*
+rm -fr ~/Library/Application\ Support/Chef\ Workstation\ App/
+rm -fr /etc/chef
+gem uninstall chef chef-config chef-telemetry chef-utils chef-vault chef-zero
 ```
 
 
@@ -762,6 +775,8 @@ kitchen list
  Pre-Flight checks before executing a cookbook to find which nodes will be affected and how
 
 ```bash
+# PENDING TO COMPLETE THIS PART: Showing affected nodes before uploading cookbooks
+
 chef gem install knife-preflight
 
 knife preflight ntp
@@ -769,5 +784,13 @@ knife preflight ntp
 knife search node recipes:ntp -a name
 
 knife search node roles:ntp -a name
+```
+
+
+
+Try parts of a cookbook interactively with `chef-shell`
+
+```bash
+chef-shell
 ```
 
