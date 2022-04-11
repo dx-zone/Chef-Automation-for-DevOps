@@ -19,6 +19,7 @@ This is my quick reference of commands, configuations and procedures to setup a 
 
 **Chef documentation**
 
+* [Chef Overview](https://docs.chef.io/chef_overview/)
 * [Install Chef Workstation (formerly known as ChefDK)](https://docs.chef.io/workstation/install_workstation/)
 * [Setup Chef Workstation](https://docs.chef.io/workstation/getting_started/)
 * [About Attributes](https://docs.chef.io/attributes/)

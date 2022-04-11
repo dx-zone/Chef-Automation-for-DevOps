@@ -61,3 +61,40 @@ end
 message = node['my_cookbook']['message']
 Chef::Log.info("** Saying what I was told to say: #{message}")
 
+
+# Templates
+template '/tmp/message' do
+  source 'message.erb'
+  variables(
+    hi: 'Hallo',
+    world: 'Welt',
+    from: node['fqdn']
+  )
+end
+
+
+# Set environment variable to be used during the Chef client
+ENV['MESSAGE'] = 'Hello from Chef'
+
+execute 'print value of environment variable $MESSAGE' do
+  command 'echo $MESSAGE > /tmp/message'
+end
+
+
+# Pass an argument to a shell command
+max_mem = node['memory']['total'].to_i * 0.8
+
+execute 'echo max memory value into tmp file' do
+  command "echo #{max_mem} > /tmp/max_mem"
+end
+
+
+# Passing multi-line argument to a shell
+max_mem = node['memory']['total'].to_i * 0.8
+
+execute 'echo max memory value into tmp file' do
+  command <<EOC
+  echo #{message} > /tmp/message
+EOC
+end
+
