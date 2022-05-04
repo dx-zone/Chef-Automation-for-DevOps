@@ -160,6 +160,16 @@ knife node run_list delete server 'recipe[my_cookbook]'
 
 
 
+Set a runlist or a recipe for a specific node
+
+```bash
+knife node run_list set test-node 'recipe[iptables]'
+
+knife node run_list set <my-server> role[custom_role], recipe[my_cookbook]
+```
+
+
+
 Run the Chef client on your node to associate the host, add it as a node, and bootstrap it to the Chef Server or Hosted Chef
 
 ```bash
@@ -440,6 +450,15 @@ Run a cookbook locally on a chef client server/node without pulling the cookbook
 
 ```bash
 chef-client --local-mode -o my_local_cookbook
+```
+
+
+
+Override a run-list and run the recipe specified.
+
+```ruby
+chef-client -o 'recipe[cookbook::recipe]'
+chef-client --override-runlist 'recipe[cookbook::recipe]'
 ```
 
 
