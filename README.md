@@ -463,6 +463,14 @@ chef-client --override-runlist 'recipe[cookbook::recipe]'
 
 
 
+Run `chef-client` as dry run to find what will be changed in the node
+
+```bash
+chef-client -W
+```
+
+
+
 Using `knife` in local mode just like running a cookbook with `chef-client` in local mode.
 
 ```bash
@@ -499,7 +507,7 @@ knife role from file web_servers.rb
 
 
 
-Assign a **role** to a node called *server*
+Assign/Append a **role** to an existing run_list for a system named *server*
 
 ```bash
 knife node run_list add server 'role[web_servers]'
@@ -507,10 +515,17 @@ knife node run_list add server 'role[web_servers]'
 
 
 
-Remove a node from the **role** called *server*
+Overwrite a **role** assigned in a run_list for a system named *server*
 
 ```bash
-knife node run_list add server 'role[web_servers]'
+knife node run_list set server 'role[web_servers]'
+```
+
+
+Remove a node from the **role** to a system named *server*
+
+```bash
+knife node run_list remove server 'role[web_servers]'
 ```
 
 
