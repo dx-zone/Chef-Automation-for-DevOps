@@ -454,7 +454,7 @@ chef-client --local-mode -o my_local_cookbook
 
 
 
-Override a run-list and run the recipe specified. This will replace any current run list and will run with specified items for a single run.
+Override a run-list assigned to an node. To run a specific cookbook/recipe that is not assigned in a run_list to a particular node, a cookbook/recipe can be executed. In other words, even when a node is not assigned to that run_list where that particular cookbook/recipe belongs to, there is a way that a node can call the Chef Infra Server and ask for a specific cookbook/recipe to run (hence override a run_list). This will skip any cookbook/recipe assigned to the node and will run the specified items (role, cookbook, recipe) for a single run.
 
 ```ruby
 chef-client -o 'recipe[cookbook::recipe]'
