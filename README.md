@@ -2,7 +2,7 @@
 
 
 
-This is my quick reference of commands, configuations and procedures to setup a local environment on Mac OS X during my learning process for infrastructure and cloud automation with Chef, Knife, Cookbooks, Vagrant, and other automation modules with Ruby. The references and commands documented are the results of my learning experience and the findings following along the Chef documentation and other books.
+This is my quick reference of commands, configurations and procedures to setup a local environment on Mac OS X during my learning process for infrastructure and cloud automation with Chef, Knife, Cookbooks, Vagrant, and other automation modules with Ruby. The references and commands documented are the results of my learning experience and the findings following along the Chef documentation and other books.
 
 
 
