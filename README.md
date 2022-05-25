@@ -454,7 +454,7 @@ chef-client --local-mode -o my_local_cookbook
 
 
 
-Override a run-list and run the recipe specified.
+Override a run-list and run the recipe specified. This will replace any current run list and will run with specified items for a single run.
 
 ```ruby
 chef-client -o 'recipe[cookbook::recipe]'
@@ -475,6 +475,20 @@ Using `knife` in local mode just like running a cookbook with `chef-client` in l
 
 ```bash
 knife node run_list add -z laptop 'recipe[my_cookbook]'
+```
+
+
+
+Working with cached cookbooks/recipes on a node.
+After `chef-client` runs, it will download and store the cookbooks and recipes locally on a node at `/var/chef/cache/cookbooks` and then will execute them. This can be useful to troubleshoot and test cookbooks at a local level in the node when something either failed or needs to be tweak for troubleshooting purposes without affecting or changing the cookbooks/recipes already in the Chef Infra server.
+
+```bash
+ls /var/chef/cache/cookbooks/
+vi /var/chef/cache/cookbooks/my_cookbook_01/default.rb
+# Make some modifications as needed
+
+# Use cached cookbooks without overwriting local differences from the Chef Infra Server.
+chef-client --skip-cookbook-sync
 ```
 
 
