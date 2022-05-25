@@ -62,7 +62,7 @@ gem uninstall chef chef-config chef-telemetry chef-utils chef-vault chef-zero
 
 
 
-Configure Ruby Environmnet for Chef
+Configure Ruby Environment for Chef
 
 ```bash
 # BASH
